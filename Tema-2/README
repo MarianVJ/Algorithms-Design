@@ -1,0 +1,116 @@
+										README
+								Tema 2 Proiectarea Algoritmilor
+											Jorascu Marian Vladut 325CD
+											
+
+
+	
+
+Problema 1 : MINLEX BFS
+Tip Algoritm : Parcurgerea in latime (BFS) + Sortare 
+Complexitate : O(m + n )  n - numarul de noduri ; m - numarul de muchii -> pt parcurgerea BFS
+			   nO(klogk) -> pentru sortarea celor n lisate de adiacenta , iar k reprezinta dimensiuna
+			   unei liste
+			   
+Pentru ca parcurgerea mea BFS sa fie minim lexicografica , era nevoie ca listele
+de adiacenta sa fie si ele sortarea crescator ( in ordine lexicografica ) (
+am parcurs in BFS
+fiecare lista de adiacenta cu o structura for{ : } ). Astfel dupa 
+ce am citit toate muchiile , sortam pe rand fiecare lista , iar apoi 
+Parcurgem grafu in latime (BFS).Algoritmul BFS este cel implementat de mine in
+cadrul laboratorului de "Parcurgerea grafului". Pornesc dintr-un nod de start
+(1 in cazul meu ) , il marchez ca fiind vizitat , iar apoi adaug in coada mea
+toti vecinii directi ai nodului curent , care sunt inca nevizitati
+. Algoritmul se termina cand nu mai am elemente in coada.
+									
+
+Problema 2 : Disjcnt
+Tip Algoritm : Determinarea componente biconexe 
+Complexitate : O(m +  n ) - n numarul de noduri si m - numarul de muchii
+
+Cerinta problemei era sa determinam numarul de perechi de noduri intre care exista
+cel putin 2 drumuri distincte ( care nu au muchii in comun) . Pentru a rezolva aceastei
+problema m-am gandit sa folosesc algoritmul de determinare a componentelor biconexe
+implementat si incadrul laboratorului de "Aplicatii DFS". Analizand inputului pentru aceasta
+problema , am obervat ca exista posibilitatea ca o muchie sa exista de doua ori. 
+Pentru ca algormtul sa functioneze si in aceasta situatie , am adaugat inca un
+ nod suplimentar n+1 , iar atunci cand o muchie este citita de doua ori se va adauga o muchie
+intre nodul "suplimentar" n+1 si fiecare din cele 2 noduri. De fiecare data cand determin
+o componenta biconexa , numar cate noduri contine aceasta . Astfel voi sti si cate perechi
+ se pot forma cu acele noduri ( combinari de n luate cate 2 ) cu alte cuvinte
+n(n-1)/2 , valorea care se adauga la rezultatul final. Deoarece graful este conex ( comform
+enuntului) Este suficienta aplicarea algoritmului pornind din oricare din cele n noduri 
+( eu am pornit de la nodul 1 ). Semnificatia vectorilor folositi sunt d - reprezinta nivelul
+pt fiecare nod ( la care a fost descoperit ) , low[k] - nivelul minim la care se poate ajunge 
+parcurgand o muchie de intoarcere care are radacina in nodul respectiv, p[k] parintele nodului
+k, si st - stiva in care adaug pe rand nodurile din parcurgerea DFS (Initial am facut problema 
+in java si  orice as fi facut primeam stackoverflow ( nu stiam de acea comanda cu marirea 
+capacitatii stivei) iar stiva mea retinea toate muchiile parcurse , dar din pricina faptului
+ca voiam sa optimizez am renuntat si la a doua componenta a muchiei ( o muchie e descrisa
+de doua noduri nodul de start si nodul de final) asa ca am pastrat doar nodurile start)).
+Algoritmul de determinarea a componentelor biconexe are la baza algorimul de determinarea a 
+punctelor de articulatie , deoarece o componenta biconexa nu contine niciun nod critic. 
+Astfel , in momentul in care determinam un punct de articulatie , toate nodurile inserate
+in stiva mea dupa acel nod , fac parte din aceeasi componenta conexa, nodul critic
+si toate nodurle care sunt inserate dupa el sunt scoase apoi din stiva, Numar 
+nr de elemente din componenta , calculez combinarile , si adaug la rezultatul final.
+
+
+Problema 3 : Rtd
+Tip Algoritm : Dijkstra 
+Complexitate : O(V*V + E) unde V- numarul de noduri ; E - numarul de muchii 
+n*n provine de la faptul ca am folosit o coada de prioritati ( din java) , in care
+coada este implementata ca o coada liniara , iar functia de extragere min se
+executa in O(V).
+
+
+Cand am incercat sa rezolv prima data problema am folosit tot algoritmul lui Dijkstra
+implementat in cadrul laboratorului de "Drumuri Minime", si facand debugging am observat
+ca pot ajunge intr-o pozitie , cu acelasi cost ,dar nu acest lucru este problema , fiecare
+din aceste posibilitati imi poate aduce zarul pe acea pozitie intr-o modalitate difeerita, iar
+eventuale mutari spre nodul destinatie depinde de modul in care zarul ajunge pe acele coordonate.
+Astfel, in matricea de distante si de "vizitat" voi mai adauga o dimensiune care sa reprezinte 
+cum este pozitionat acel zar . Un zar daca este  asezat pe o fata X , poate avea 4 posibilitati
+de a fi rotit . Iar in functie de cum este asezat zarul codificarea mea este : 7 * (up) + left
+In total sunt 24 de codificari posibile ( 4 pt fiecare din cele 6 fete) . Iar aceste codificari nu se 
+suprapun pentru niciuna din muchiile care se (compun) pentru a genera acest rezultat. Algoritmul 
+lui Dijkstra este aplicat pe matrice : astfel acele noduri din antet si muchii , sunt urmatoarele
+cele V noduri sunt de fapt n * m (V = n * m ,  unde n si m sunt dimensiunile matrice) , iar 
+numarul de muchii este E = V * 4 , fiecare nod are cate 4 vecini
+ ( exceptie facadn nodurile de pe margini care au 
+3 vecini ,si nodurile din colturi care au doar 2 ) . Astfel Folosim o coada 
+de prioritati implementata liniar din Java, in care introduce pe rand elemente 
+de Tipul Pereche . Acest elemente retine coordonatele unei celule ( practic un nod ) , 
+fata pe care este asezat nodul , care este fata din stanga , care este fata
+"din fata" , si costul de la pozitia initiala pana la acea pozitie ( x y salvata) cu codificarea
+(ce se obtine combunanad up cu left). Aceasta clasa implementeaza interfata Comparable , si compara
+elementele dupa cost . Acest lucru este necesar deoarece pt ca Dijkstra sa functioneze corect , 
+cand scoatem din matrice trebuie sa scoatem nodul , cu cel mai mic cost ( de la nodul initial).
+In rest algoritmul Dijkstra este exact ca cel din laborator , doar ca atunci cand ma duc intr-un
+nod vecin , verific nu doar coordonatele ci si aseazarea zarului in care ajunge.
+
+
+Problema 4 : Revedges
+Tip Algoritm : FloydWarshall
+Complexitate Algoritm : O(V*V*V) , unde V este numarul din noduri 
+
+Pentru rezolvarea acestei probleme am folosit algoritmul FloydWarshall implementat
+in cadrul laboratorului de "Drumuri Minime" pe o matrice ale costuri urmeaza sa le
+explic in cele ce urmeaza. Initial citesc toate muchiile din fisierul de intrare.
+(Daca exista muchie de la u la v , a[u][v] este 1 ) . Matricea d are 
+urmatoarele specificatii : Daca exista muchie de la u si v atunci d[u][v] este 0 , 
+iar aici avem 2 cazuri , daca exista si muchie de la v la u , atunci si d[v][u]
+este 0 , atlfe d[v][u] este 1 ( Cu alte cuvinte costul pentru a ajunge de la v
+la u este 1 , adica trebuie sa inversam o muchie) , iar daca niciuna din 
+cele 2 cazuri nu este valid , costul este INF ( o valorea foarte mare).
+Pe aceasta matrice d aplic algoritmul FloydWarshall . Iar apoi citesc pe rand nodurile
+intre care trebuie sa determin drumul , cu un nr cat mai mic de muchii inversate 
+si interoghez matricea d , care acum contine acele costuri cu un nr cat mai mic
+de muchii inversate. ( De asemenea matricea de are 0 pe diagonala). 
+
+
+
+
+
+
+

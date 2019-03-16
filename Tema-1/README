@@ -1,0 +1,138 @@
+			Tema-1-PA 
+				Jorascu Marian Vladut 325CD
+
+
+Problema 1 : Frati
+
+Tipul Algoritmului: Greedy 
+Complexitate : O(n log n) - n -numarul concursurilor la care pot participa
+cei doi frati
+
+Algoritmul pe care l-aam elabotorat pentru rezolvarea acestei probleme , sorteaza
+2 vectori favorabil pentru fiecare dintre cei doi frati . Pentru a sorta fiecare
+vector mi-am definit 2 comparatori care sorteaza elementele de tip Concurs 
+in ordine descrescatoare dupa concursurile care maximizeaza diferenta dintre 
+obiectele preferate ale Concursului curent si obiectele preferate ale fratelui sau
+pentru celalte concursuri. Daca exista 2 concursuri cu aceeasi valoare/diferenta
+se va alege concursul care genereaza fiecaruia dintre ei un numar mai mare de
+obiecte preferate. Mi-am definit o clasa Concurs in care retin numarul de jocuri
+numarul de benzi ale unui concurs si de asemenea in aceasta clasa auxiliar mai exista
+si un camp numit flag . Odata ce au fost sortati cei doi vectori (de la elementele 
+cele mai dorite la cele care ii ajuta cel mai putin)
+ favorabil pentru
+fiecare dintre frati , vom parcurge de la inceput fiecare din acestea si in functie
+de cin este la rand sa isi aleaga concursul , se va alege optimul dintre cele
+ramase libere. Deoarece fiecare vector este sortat cu alt comparator , elementele
+nu vor avea aceeasi ordine , de aceea de fiecare data cand alegem un concurs setam
+camppul flag al obiectului de tip Concurs la 1 , pentru a nu putea fi ales 
+de fratele sau . 
+
+
+Problema 2 : Ursi
+Tipul Algoritmului : Progrmare Dinamica
+Complexitate : O(n * n) (este chiar teta ) - n reprezinta lungimea mesajului 
+
+Am pornit de la ideea ca o fata zambitoare trebuie sa contina doua caractere
+'^' si oricate caractere '_'. Astfel , un caracter '^' de pe pozitia i poate
+juca doua roluri in definirea unei fete :  sa inchida o fata ce a fost 
+"deschisa" anterior sau sa deschida una ce va fi inchisa ultirior. Caracterul '_'
+trebuie sa se afle intre 2 caractere '^' . Vom calcula numarul de fete zambitoare
+ce se pot forma mai intai cu : 1 caracter, 2 caracter .... n caractere. 
+Am bordat matricea de dinemica cu o prima linie si prima coloana 0
+astfel incat sa pot aplica recurenta gasita pe toate elementele.
+Semnificatia la un moment oarecare din program a matricei dp[i][j] este urmatoarea:
+dp[i][j] contine numarul de fete ce se pot forma avand la dispozitie primele i caractere , 
+si j-1 fete deschise. Prin urmare rezultatul final se afla stocat in dp[n][1] = 
+numarul de fete ce se pot forma cu cele n caractere si 1-1 = 0 fete deschise.
+
+La pasul i cand trebuie calculat numarul de fete ce se pot forma cu primele i 
+caractere , vom folosi rezultatele obtinute la pasul i-1 atunci cand am
+cu 1 caracter mai putin, folosindu-ma de cauzrile in care am cu o fata deschisa mai
+putin (j-1 ) si o fata deschisa mai mult (j+1) . Aceasta recurenta este atunci cand ultimul
+caracter din cele i , este  '^' .
+
+ Deoarece cand am i-1 elem. si j-2 (index j-1) fete deschise pot forma fete in X moduri ,
+ daca am i elem
+si j-1 (index j) fete deschise  pot adauga la fiecare din cele X moduri , o noua fata
+formata din una din cele j-1 fete deschis(index j) si noul caracter '^' (in total se 
+pot creea j-1 fete diferite ce se pot adauga pe rand la fiecare mod din cele X), de 
+ de  unde rezulta (j-1) * dp[i-1][j-1] fete , la acest
+produs se adauga numarul modalitatilor
+de fete ce se pot forma avand i-1 caractere si j+1 fete deschise
+(ultimul caracter din numarul curent i (care este si '^')
+va reprezenta o noua fata deschisa , si astfel
+i-1 caractere si j - 1 + 1 = j (indicele j+1) fete deschise) .
+ Prin urmare atunci cand al i-lea caracter
+este '^' recurenta este dp[i][j] = (dp[i-1][j-1] * (j-1) + dp[i-1][j+1]).
+Cand caracterul este '_' recurenta se schimba deoarece si rolul acestui caracter difera
+In acest caz avem dp[i][j] = dp[i-1][j] * (j-1)  intrucat '_' nu poate deschide 
+o noua fata, dar si nici nu poate inchide o alta fata deja deschisa , il putem 
+"lipi" pe rand pe una din cele j-1 (indexul j) fete deschise : Il lipesc la prima
+fata X moduri , il lipesc la a doua X moduri ... la fata j - 1 X moduri
+In total  = (j-1) * X  (unde X = dp[i-1][j])
+
+
+
+Problema 3 : Planificare
+Tipul Algoritmului : Progrmare Dinamica
+Complexitatea : O(n*n) - n este numarul probelor ( Aceasta complexitate 
+este worst case si ar avea loc daca toate concursurile ar putea fi
+unite intr-unul singur)
+
+
+Acest algoritm calculeaza mai intai pierderile minime ale concursului
+i folosindu-se de pierderile minime calculate anterior ( pierdeerile minime
+de la proba 1 pana la n inclusiv). Pentru fiecare proba i , incerc sa 
+unesc proba, prima data cu proba cu indicele i-1, si astfel calculez care ar 
+fi pierderea minima pana la aceea inclusiv , fara a include elementul
+de pe pozitia respectiva .
+ Calculez aceste minime de la concursul i 
+pana la ultimul concurs  pentru care nu pot concatena proba i
+cu toate probele dintre  i si un indice i-k  . Daca cumva 
+nu pot uni in acelasi concurs aceste probe , voi actualiza un indice
+astfel incat pentru proba i+1 sa nu mai incerc sa mai concatenez 
+iarasi cu aceeasta proba ( deoarece sigur nu voi putea) . Astfel
+calculez toate aceste minime si actualizez la fiecare pas . Pentru 
+ultima proba , voi incerca din nou sa concatenez ultima proba , cu cat
+mai multe alte probe ( la care se adauga minimele calculate anterior),
+ dar cand voi calcula pierdereile minime pasului curent, voi 
+considera pierderile "concatenarii" acestor concursuri 0 . De asemenea
+si in acest caz , caut "in minimele calculate anterior" atat timp cat
+pot concatena. Pentru a retine numarul concurusrilor , in care se desfasoara
+toate aceste probe , am un vector , care se actualizeaza 
+la fiecare pas atunci cand se actualizeaza si vectorul dp[] 
+ cu pierderile minime.
+
+
+
+Problema 4 : Numaratoare
+Tipul Algoritmului : BackTraking
+Complexitatea : Complexitatea la o prima vededre ar putea seamna cu
+un n! dar nu este deloc asa , datorita restrictiilor puse in functia
+mea de backtracking si inainte de apelurile recursive.
+
+Functia mea de backtraking are mai multi parametrii : sumCrt -suma elementelor de pana acum
+care fac parte din solutie
+un Sir de caractere ce reprezinta solutia a caror suma este sumCrt, nrTerm-
+numarul termenilor din sir si lastElem-ultimul element din termeni. Am mai multe
+variabile globale pentru a monitoriza de fiecare data cand se gaseste o solutie
+sau atunci cand am gasit solutia o vom salva tot intr-o variabila globala. 
+Nu pot spune eficienta acestui algoritm , dar am mai redus din durata mare de timp 
+a executiei backtrakingului meu prin taierea multor ramuri 
+despre car stiu sigur ca nu vor putea duce la solutii valide.
+Astfel  nu voi mai cauta solutia daca la pasul curent s-a gasit una si acutalizez indicele global
+ . De asemenea daca am ori sumacurenta mai mare decat
+  numarul pe caretrebuie sa il partitionez, sau numarul de elemente din suma curenta
+este mai mare decat numarul in care trebuie partitionat numarul citit .
+O parte din aceste conditii sunt verificate inainte de apelul recursiv , pentru a 
+evita alocarea spatiului pe stiva pentru parametrii .. si toate intarzierile
+provocate de un apel de functie care oricum nu poate aduce solutia. Ultima conditie care
+trebuie indeplinita pentru ca apelul recursiv sa se produca 
+ dat este ca  suma necesara
+ce mai trebuie acumulata pentru a ajunge la numarul de partitionat sa fie mai mare decat
+numarul de termeni ce mai sunt necesari(adica sa poata fi puse pe urmatoarele pozitii
+macar numai cifre de 1).
+Astfel cand s-a gasit solutia , si indicele este cel potrivit
+opesc toate apelurile recursive si scriu in fisier.Daca la terminarea 
+apelului functiei de backtraking indicele nu este -1 inseamna ca nu
+s-a putut genera suma pana la acel indice.
